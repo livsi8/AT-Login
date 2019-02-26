@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" >
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>MySel20Proj</groupId>
+    <artifactId>MySel20Proj</artifactId>
+    <version>1.0</version>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <cucumber.version>3.0.2</cucumber.version>
+        <parallel.scheme>SCENARIO</parallel.scheme>
+        <parallel.tag1>@C1</parallel.tag1>
+        <!--<parallel.tag2>~@BUG</parallel.tag2>-->
+        <fork.count>1</fork.count>
+        <aspectj.version>1.9.1</aspectj.version>
+    </properties>
+
+    <build>
+
+    <!--Плагин для настройки и запуска параллельных тестов на уровне Cucumber-->
+    <plugins>
+    <plugin>
+        <groupId>com.github.temyers</groupId>
+        <artifactId>cucumber-jvm-parallel-plugin</artifactId>
+        <version>5.0.0</version>
+        <executions>
+            <execution>
+                <id>generateRunners</id>
+                <phase>generate-test-sources</phase>
+                <goals>
+                    <goal>generateRunners</goal>
+                </goals>
+                <configuration>
+                    <glue>
+                        <package>Steps</package>
+                    </glue>
+                    <useTestNG>false</useTestNG>
+                    <tags>
+                        <!--<tag>@Open_Positions</tag>-->
+                        <tag>${parallel.tag1}</tag>
+                        <!--<tag>${parallel.tag2}</tag>-->
+                    </tags>
+                    <featuresDirectory>src/test/resources</featuresDirectory>
+                    <cucumberOutputDir>target/cucumber-parallel</cucumberOutputDir>
+                    <namingScheme>simple</namingScheme>
+                    <namingPattern>Parallel{c}IT</namingPattern>
+                    <parallelScheme>${parallel.scheme}</parallelScheme>
+                </configuration>
+            </execution>
+        </executions>
+    </plugin>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>2.21.0</version>
+            <configuration>
+                <argLine>
+                    -javaagent:${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar
+                </argLine>
+                <forkCount>${fork.count}</forkCount>
+                <reuseForks>true</reuseForks>
+                <includes>
+                    <include>**/Parallel*IT.class</include>
+                </includes>
+                <testFailureIgnore>false</testFailureIgnore>
+            </configuration>
+
+            <dependencies>
+                <dependency>
+                    <groupId>org.aspectj</groupId>
+                    <artifactId>aspectjweaver</artifactId>
+                    <version>${aspectj.version}</version>
+                </dependency>
+            </dependencies>
+
+        </plugin>
+    </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-java</artifactId>
+            <version>${cucumber.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-junit</artifactId>
+            <version>${cucumber.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-core</artifactId>
+            <version>${cucumber.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>2.25.0</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>info.cukes</groupId>
+            <artifactId>cucumber-junit</artifactId>
+            <version>1.2.5</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    <dependencyManagement>
+
+    </dependencyManagement>
+</project>

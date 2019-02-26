@@ -24,6 +24,10 @@ Thumbs.db
 *.lib
 *.sbr
 obj/
+node_modules/
+.settings/
+target/
+.idea/
 [Rr]elease*/
 _ReSharper*/
 [Tt]est[Rr]esult*
