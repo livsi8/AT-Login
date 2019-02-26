@@ -1,14 +1,15 @@
 package Steps;
 
 import LoginPage.LoginPage;
-import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
-import org.junit.Assert;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
-import static LoginPage.Singlton.getDriver;
+import static Drivers.Singlton.getDriver;
 
 
 public class LoginPageSteps extends Steps {
@@ -21,13 +22,9 @@ public class LoginPageSteps extends Steps {
         lp = new LoginPage();
     }
 
-    @After
-    public void cleanUp(){}
-
-
     @Given("^I go to server (.*)$")
     public void iGoToServer(String url) {
-        driver.manage().window().maximize();
+//        driver.manage().window().maximize();
         driver.get(url);
     }
 
@@ -45,11 +42,12 @@ public class LoginPageSteps extends Steps {
     @And("^I press LoginPage button$")
     public void iPressLoginPageButton() {
         lp.getBtLogin().click();
-    }
 
-    @And("^I wait (\\d*) ms and chack LOGO$")
-    public void iWaitMsAndChackLogo(Integer ms) throws InterruptedException {
-        Thread.sleep(ms);
-        Assert.assertTrue(lp.getLogo().isDisplayed());
+        try {
+            new WebDriverWait(getDriver(), 60).until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector("#btLogin")));
+            new WebDriverWait(getDriver(), 30).until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector("#forBlur")));
+            new WebDriverWait(getDriver(), 30).until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector(".ui-widget-overlay")));
+        } catch (Exception e) {
+        }
     }
 }
